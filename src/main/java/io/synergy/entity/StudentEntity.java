@@ -1,0 +1,21 @@
+package io.synergy.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@Table(name = "students")
+public class StudentEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String firstName;
+    private String lastName;
+    private String faculty;
+    private int grade;
+}
