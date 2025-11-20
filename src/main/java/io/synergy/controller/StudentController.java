@@ -4,6 +4,7 @@ import io.synergy.dto.StudentDto;
 import io.synergy.dto.StudentResponseDto;
 import io.synergy.service.StudentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class StudentController {
     }
 
     @PostMapping("/api/service/Student")
+    @PreAuthorize("hasRole('ADMIN')")
     public StudentResponseDto addStudent(@RequestBody StudentDto student) {
         return studentService.save(student);
     }
 
     @PutMapping("/api/service/Student/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public StudentResponseDto updateStudent(
             @PathVariable Long id,
             @RequestBody StudentDto student) {
@@ -30,24 +33,28 @@ public class StudentController {
     }
 
     @DeleteMapping("/api/service/Student/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable Long id) {
         studentService.delete(id);
     }
 
     @GetMapping("/api/service/Student/searchByFirstName")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<StudentResponseDto> findByFirstName(
             @RequestParam String firstName) {
         return studentService.findByFirstName(firstName);
     }
 
     @GetMapping("/api/service/Student/searchByLastName")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<StudentResponseDto> findByLastName(
             @RequestParam String lastName) {
         return studentService.findByLastName(lastName);
     }
 
     @GetMapping("/api/service/Students")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<StudentResponseDto> getAllStudents() {
         return studentService.findAll();
     }
