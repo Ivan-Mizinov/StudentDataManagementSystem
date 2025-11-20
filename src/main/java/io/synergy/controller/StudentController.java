@@ -35,6 +35,18 @@ public class StudentController {
         studentService.delete(id);
     }
 
+    @GetMapping("/api/service/Student/searchByFirstName")
+    public List<StudentResponseDto> findByFirstName(
+            @RequestParam String firstName) {
+        return studentService.findByFirstName(firstName);
+    }
+
+    @GetMapping("/api/service/Student/searchByLastName")
+    public List<StudentResponseDto> findByLastName(
+            @RequestParam String lastName) {
+        return studentService.findByLastName(lastName);
+    }
+
     @GetMapping("/api/service/Students")
     public List<StudentResponseDto> getAllStudents() {
         return studentService.findAll();

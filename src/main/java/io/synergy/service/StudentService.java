@@ -38,7 +38,7 @@ public class StudentService {
     )
     public StudentResponseDto update(long id, StudentDto student) {
         StudentEntity existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Не удалось найти студента с id: " + id));
 
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
@@ -55,7 +55,7 @@ public class StudentService {
     )
     public void delete(long id) {
         if (!studentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Student not found with id: " + id);
+            throw new EntityNotFoundException("Не удалось найти студента с id: " + id);
         }
         studentRepository.deleteById(id);
     }
@@ -65,9 +65,33 @@ public class StudentService {
             propagation = Propagation.SUPPORTS,
             readOnly = true
     )
+    public List<StudentResponseDto> findByFirstName(String firstName) {
+        return studentRepository.findByFirstName(firstName)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.SUPPORTS,
+            readOnly = true
+    )
+    public List<StudentResponseDto> findByLastName(String lastName) {
+        return studentRepository.findByLastName(lastName)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.SUPPORTS,
+            readOnly = true
+    )
     public List<StudentResponseDto> findAll() {
-        List<StudentEntity> list = studentRepository.findAll();
-        return list.stream()
+        return studentRepository.findAll()
+                .stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
     }
