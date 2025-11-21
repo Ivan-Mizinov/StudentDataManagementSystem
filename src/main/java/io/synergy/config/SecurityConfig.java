@@ -1,5 +1,6 @@
 package io.synergy.config;
 
+import io.synergy.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -17,19 +18,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(PasswordEncoder passwordEncoder) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/service/User").hasRole("ADMIN")
+                        .requestMatchers("api/service/User").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .userDetailsService(userDetailsService);
         return http.build();
     }
 
@@ -41,7 +45,7 @@ public class SecurityConfig {
                 .roles("ADMIN")
                 .build();
         UserDetails userUser = User.builder()
-                .username("user1")
+                .username("user")
                 .password(passwordEncoder.encode("userpass"))
                 .roles("USER")
                 .build();

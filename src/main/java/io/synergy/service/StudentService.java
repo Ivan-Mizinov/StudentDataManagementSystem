@@ -17,9 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final NotificationService notificationService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository,
+                          NotificationService notificationService) {
         this.studentRepository = studentRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional(
@@ -27,6 +30,7 @@ public class StudentService {
             propagation = Propagation.REQUIRED
     )
     public StudentResponseDto save(StudentDto student) {
+        System.out.println("Received student: " + student);
         StudentEntity entity = mapToEntity(student);
         studentRepository.save(entity);
         return this.mapToResponseDto(entity);
@@ -40,12 +44,21 @@ public class StudentService {
         StudentEntity existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Не удалось найти студента с id: " + id));
 
+        boolean gradeChanged = student.getGrade() != existingStudent.getGrade();
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         existingStudent.setFaculty(student.getFaculty());
         existingStudent.setGrade(student.getGrade());
 
         StudentEntity updatedStudent = studentRepository.save(existingStudent);
+
+        if (gradeChanged) {
+            notificationService.sendNotification(
+                    updatedStudent.getId(),
+                    "Обновление оценки",
+                    "Ваша оценка была обновлена на " + updatedStudent.getGrade() + "."
+            );
+        }
         return this.mapToResponseDto(updatedStudent);
     }
 

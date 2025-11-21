@@ -19,7 +19,6 @@ public class StudentController {
     }
 
     @PostMapping("/api/service/Student")
-    @PreAuthorize("hasRole('ADMIN')")
     public StudentResponseDto addStudent(@RequestBody StudentDto student) {
         return studentService.save(student);
     }

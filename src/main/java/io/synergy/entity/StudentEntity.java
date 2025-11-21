@@ -18,6 +18,10 @@ public class StudentEntity {
     private String faculty;
     private int grade;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public StudentEntity(String firstName, String lastName, String faculty, int grade) {
         this.firstName = firstName;
         this.lastName = lastName;
