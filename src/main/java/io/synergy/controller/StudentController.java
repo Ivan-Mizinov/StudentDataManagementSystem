@@ -53,6 +53,31 @@ public class StudentController {
         return studentService.findByLastName(lastName);
     }
 
+    @GetMapping("/api/service/Student/searchByFaculty")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public List<StudentResponseDto> findByFaculty(
+            @RequestParam String faculty
+    ) {
+        return studentService.findByFaculty(faculty);
+    }
+
+    @GetMapping("/api/service/Student/searchByGrade")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public List<StudentResponseDto> findByGrade(
+            @RequestParam int grade
+    ) {
+        return studentService.findByGrade(grade);
+    }
+
+    @GetMapping("/api/service/Student/searchByFacultyAndGrade")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public List<StudentResponseDto> findByFacultyAndGrade(
+            @RequestParam String faculty,
+            @RequestParam int grade
+    ) {
+        return studentService.findByFacultyAndGrade(faculty, grade);
+    }
+
     @GetMapping("/api/service/Students")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<StudentResponseDto> getAllStudents() {

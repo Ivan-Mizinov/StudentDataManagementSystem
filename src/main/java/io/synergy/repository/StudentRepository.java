@@ -11,6 +11,9 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     List<StudentEntity> findByFirstName(String firstName);
     List<StudentEntity> findByLastName(String lastName);
+    List<StudentEntity> findByFaculty(String faculty);
+    List<StudentEntity> findByGrade(int grade);
+    List<StudentEntity> findByFacultyAndGrade(String faculty, int grade);
 
     @Query("SELECT AVG(s.grade) FROM StudentEntity s")
     Double findAverageGrade();

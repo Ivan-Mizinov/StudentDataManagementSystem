@@ -89,6 +89,42 @@ public class StudentService {
             propagation = Propagation.SUPPORTS,
             readOnly = true
     )
+    public List<StudentResponseDto> findByFaculty(String faculty) {
+        return studentRepository.findByFaculty(faculty)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.SUPPORTS,
+            readOnly = true
+    )
+    public List<StudentResponseDto> findByGrade(int grade) {
+        return studentRepository.findByGrade(grade)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.SUPPORTS,
+            readOnly = true
+    )
+    public List<StudentResponseDto> findByFacultyAndGrade(String faculty, int grade) {
+        return studentRepository.findByFacultyAndGrade(faculty, grade)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.SUPPORTS,
+            readOnly = true
+    )
     public List<StudentResponseDto> findAll() {
         return studentRepository.findAll()
                 .stream()
